@@ -1,6 +1,9 @@
 package routes
 
-import "github.com/gin-gonic/gin"
+import (
+	"github.com/gin-gonic/gin"
+	"github.com/rlevidev/oauth-go/src/controllers"
+)
 
 func InitRoutes(r *gin.RouterGroup) {
 	v1 := r.Group("/api/v1")
@@ -10,4 +13,6 @@ func InitRoutes(r *gin.RouterGroup) {
 			"message": "pong",
 		})
 	})
+
+	v1.POST("/users/register", controllers.CreateUser)
 }

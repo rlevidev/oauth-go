@@ -23,7 +23,7 @@ func NewRestErr(message string, status int, err string, causes []Causes) *RestEr
 		Message: message,
 		Status:  status,
 		Err:     err,
-		Causes: causes,
+		Causes:  causes,
 	}
 }
 
@@ -65,5 +65,13 @@ func NewForbiddenError(message string) *RestErr {
 		Message: message,
 		Status:  http.StatusForbidden,
 		Err:     "forbidden",
+	}
+}
+
+func NewInternalServerError(message string) *RestErr {
+	return &RestErr{
+		Message: message,
+		Status:  http.StatusInternalServerError,
+		Err:     "internal_server_error",
 	}
 }
