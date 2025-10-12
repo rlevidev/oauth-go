@@ -26,6 +26,16 @@ func NewUserDomain(
 		Name:     name}
 }
 
+func NewUserLoginDomain(
+	email string,
+	password string,
+) *UserDomain {
+	return &UserDomain{
+		Email:    email,
+		Password: password,
+	}
+}
+
 func (ud *UserDomain) EncryptPassword() {
 	encrypt := md5.New()
 	defer encrypt.Reset()

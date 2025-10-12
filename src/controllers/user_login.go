@@ -10,22 +10,21 @@ import (
 	"gorm.io/gorm"
 )
 
-func CreateUser(ctx *gin.Context, db *gorm.DB) {
-	var userRequest request.UserRegisterRequest
+func LoginUser(ctx *gin.Context, db *gorm.DB) {
+	var userLoginRequest request.UserLoginRequest
 
-	if err := ctx.ShouldBindJSON(&userRequest); err != nil {
+	if err := ctx.ShouldBindJSON(&userLoginRequest); err != nil {
 		restErr := validation.ValidateUserError(err)
 		ctx.JSON(restErr.Status, restErr)
 		return
 	}
 
-	userDomain := models.NewUserDomain(
-		userRequest.Email,
-		userRequest.Password,
-		userRequest.Name,
+	userDomain := models.NewUserLoginDomain(
+		userLoginRequest.Email,
+		userLoginRequest.Password,
 	)
 
-	userDomainResult, err := services.CreateUser(*userDomain, db)
+	userDomainResult, err := services.LoginUser(*userDomain, db)
 	if err != nil {
 		ctx.JSON(err.Status, err)
 		return
@@ -37,5 +36,5 @@ func CreateUser(ctx *gin.Context, db *gorm.DB) {
 		Name:  userDomainResult.Name,
 	}
 
-	ctx.JSON(201, userResponse)
+	ctx.JSON(200, userResponse)
 }
