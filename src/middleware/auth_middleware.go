@@ -38,9 +38,9 @@ func AuthMiddleware() gin.HandlerFunc {
 		}
 
 		// Adicionar informações do usuário ao contexto
-		ctx.Set("userID", claims.UserID)
-		ctx.Set("userEmail", claims.Email)
-		ctx.Set("userName", claims.Name)
+		ctx.Set("user_id", claims.UserID)
+		ctx.Set("user_email", claims.Email)
+		ctx.Set("user_name", claims.Name)
 
 		// Continuar com a requisição
 		ctx.Next()
@@ -55,9 +55,9 @@ func OptionalAuthMiddleware() gin.HandlerFunc {
 			tokenString := jwtconfig.ExtractTokenFromAuthHeader(authHeader)
 			if tokenString != "" {
 				if claims, err := jwtconfig.ValidateToken(tokenString); err == nil {
-					ctx.Set("userID", claims.UserID)
-					ctx.Set("userEmail", claims.Email)
-					ctx.Set("userName", claims.Name)
+					ctx.Set("user_id", claims.UserID)
+					ctx.Set("user_email", claims.Email)
+					ctx.Set("user_name", claims.Name)
 				}
 			}
 		}
