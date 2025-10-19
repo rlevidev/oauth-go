@@ -9,15 +9,16 @@ import (
 	"github.com/rlevidev/oauth-go/src/models"
 )
 
-var jwtSecret = []byte(getJWTSecret())
-
 func getJWTSecret() string {
 	secret := os.Getenv("JWT_SECRET")
 	if secret == "" {
 		log.Fatal("FATAL: JWT_SECRET não foi definida no arquivo .env. A aplicação não pode iniciar sem uma chave secreta.")
-
 	}
 	return secret
+}
+
+func getJWTSecretBytes() []byte {
+	return []byte(getJWTSecret())
 }
 
 // Definir dados do token
@@ -44,7 +45,7 @@ func GenerateToken(ud *models.UserDomain) (string, error) {
 	}
 
 	token := jwt.NewWithClaims(jwt.SigningMethodHS256, claims) // Cria o token sem assinatura
-	tokenString, err := token.SignedString(jwtSecret)          // Assina o token
+	tokenString, err := token.SignedString(getJWTSecretBytes()) // Assina o token
 	if err != nil {
 		return "", err
 	}
@@ -57,7 +58,7 @@ func ValidateToken(tokenString string) (*Claims, error) {
 	claims := &Claims{}
 
 	token, err := jwt.ParseWithClaims(tokenString, claims, func(token *jwt.Token) (interface{}, error) {
-		return jwtSecret, nil
+		return getJWTSecretBytes(), nil
 	})
 
 	if err != nil {
