@@ -24,17 +24,21 @@ func LoginUser(ctx *gin.Context, db *gorm.DB) {
 		userLoginRequest.Password,
 	)
 
-	userDomainResult, err := services.LoginUser(*userDomain, db)
+	loginResponse, err := services.LoginUser(*userDomain, db)
 	if err != nil {
 		ctx.JSON(err.Status, err)
 		return
 	}
 
+	// Converter para UserResponse (sem senha) para maior segurança
 	userResponse := response.UserResponse{
-		ID:    userDomainResult.ID,
-		Email: userDomainResult.Email,
-		Name:  userDomainResult.Name,
+		ID:    loginResponse.User.ID,
+		Email: loginResponse.User.Email,
+		Name:  loginResponse.User.Name,
 	}
 
-	ctx.JSON(200, userResponse)
+	ctx.JSON(200, gin.H{
+		"user":  userResponse,
+		"token": loginResponse.Token,
+	})
 }
